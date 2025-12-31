@@ -25,6 +25,23 @@ export interface User {
 }
 
 /**
+ * Get the primary provider ID for a Firebase user
+ * Prioritizes OAuth providers over password provider
+ */
+const getPrimaryProviderId = (firebaseUser: FirebaseUser): string => {
+  if (!firebaseUser.providerData || firebaseUser.providerData.length === 0) {
+    return 'unknown';
+  }
+
+  // Find OAuth provider if available (Google, etc.)
+  const oauthProvider = firebaseUser.providerData.find(
+    (provider) => provider.providerId !== 'password'
+  );
+
+  return oauthProvider?.providerId || firebaseUser.providerData[0].providerId;
+};
+
+/**
  * Convert Firebase User to our User type
  */
 export const mapFirebaseUser = (firebaseUser: FirebaseUser): User => ({
@@ -32,7 +49,7 @@ export const mapFirebaseUser = (firebaseUser: FirebaseUser): User => ({
   email: firebaseUser.email,
   displayName: firebaseUser.displayName,
   photoURL: firebaseUser.photoURL,
-  providerId: firebaseUser.providerData[0]?.providerId || 'password',
+  providerId: getPrimaryProviderId(firebaseUser),
 });
 
 /**
@@ -75,9 +92,11 @@ export const signUpWithEmail = async (
     // Update profile with display name if provided
     if (displayName && userCredential.user) {
       await updateProfile(userCredential.user, { displayName });
+      // Reload user to get updated profile
+      await userCredential.user.reload();
     }
 
-    return mapFirebaseUser(userCredential.user);
+    return mapFirebaseUser(auth.currentUser || userCredential.user);
   } catch (error) {
     throw new Error(getAuthErrorMessage(error as AuthError));
   }

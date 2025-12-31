@@ -10,7 +10,9 @@ import {
   updateUserProfile,
   onAuthStateChange,
   getCurrentUserToken,
+  mapFirebaseUser,
 } from '../services/auth.service';
+import { auth } from '../lib/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -49,30 +51,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const user = await signInWithEmail(email, password);
-      setUser(user);
-    } finally {
+      await signInWithEmail(email, password);
+      // User state will be updated by onAuthStateChange observer
+    } catch (error) {
       setLoading(false);
+      throw error;
     }
   };
 
   const signUp = async (email: string, password: string, displayName?: string) => {
     setLoading(true);
     try {
-      const user = await signUpWithEmail(email, password, displayName);
-      setUser(user);
-    } finally {
+      await signUpWithEmail(email, password, displayName);
+      // User state will be updated by onAuthStateChange observer
+    } catch (error) {
       setLoading(false);
+      throw error;
     }
   };
 
   const signInWithGoogleProvider = async () => {
     setLoading(true);
     try {
-      const user = await signInWithGoogle();
-      setUser(user);
-    } finally {
+      await signInWithGoogle();
+      // User state will be updated by onAuthStateChange observer
+    } catch (error) {
       setLoading(false);
+      throw error;
     }
   };
 
@@ -80,9 +85,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     try {
       await signOutUser();
-      setUser(null);
-    } finally {
+      // User state will be updated by onAuthStateChange observer
+    } catch (error) {
       setLoading(false);
+      throw error;
     }
   };
 
@@ -92,13 +98,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateProfile = async (displayName?: string, photoURL?: string) => {
     await updateUserProfile(displayName, photoURL);
-    // Refresh user data after profile update
-    if (user) {
-      setUser({
-        ...user,
-        displayName: displayName ?? user.displayName,
-        photoURL: photoURL ?? user.photoURL,
-      });
+    // Force refresh the user state by triggering the auth state observer
+    if (auth.currentUser) {
+      await auth.currentUser.reload();
+      const updatedUser = mapFirebaseUser(auth.currentUser);
+      setUser(updatedUser);
     }
   };
 
