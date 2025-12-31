@@ -79,10 +79,12 @@ const ReceiptUpload: React.FC<ReceiptUploadProps> = ({ onUploadComplete: _onUplo
         // Simulate upload progress (in real app, this would be actual upload)
         await simulateUpload(receiptId);
 
+        // TODO: Replace with actual API endpoint from environment variable
+        // Example: const uploadedUrl = await uploadToAPI(compressedFile);
         updateReceipt(receiptId, {
           status: 'uploaded',
           progress: 100,
-          uploadedUrl: `https://example.com/receipts/${receiptId}`, // Mock URL
+          uploadedUrl: `https://example.com/receipts/${receiptId}`, // Mock URL - replace with actual API
         });
 
         addToast('Receipt uploaded successfully!', 'success');

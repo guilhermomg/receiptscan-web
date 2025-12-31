@@ -92,5 +92,10 @@ export const revokePreviewUrl = (url: string): void => {
  * Generates a unique ID for a receipt
  */
 export const generateReceiptId = (): string => {
-  return `receipt-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  // Use crypto.randomUUID if available, fallback to timestamp + random
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return `receipt-${crypto.randomUUID()}`;
+  }
+  // Fallback for environments without crypto.randomUUID
+  return `receipt-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
 };
