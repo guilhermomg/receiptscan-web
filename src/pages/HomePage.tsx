@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Spinner, useToast } from '../components/common';
+import { ReceiptUpload } from '../components/receipt';
 
 const HomePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +17,15 @@ const HomePage: React.FC = () => {
         <p className="text-xl text-gray-600 mb-8">
           AI-powered receipt scanning and expense management
         </p>
+      </div>
+
+      {/* Receipt Upload Section */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Upload Receipts</h2>
+        <p className="text-gray-600 mb-6">
+          Capture or upload your receipt images for AI-powered processing
+        </p>
+        <ReceiptUpload />
       </div>
 
       <div className="flex flex-wrap gap-4 justify-center">
@@ -54,6 +64,9 @@ const HomePage: React.FC = () => {
           <li>✅ Zustand for global state</li>
           <li>✅ Axios for API calls</li>
           <li>✅ Common UI components (Button, Modal, Spinner, Toast)</li>
+          <li>✅ Receipt upload with drag-and-drop</li>
+          <li>✅ Camera integration for mobile devices</li>
+          <li>✅ Image compression and validation</li>
         </ul>
       </div>
     </div>
