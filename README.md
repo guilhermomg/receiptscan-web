@@ -7,8 +7,9 @@ Modern web application for AI-powered receipt scanning and expense management bu
 - ⚡️ **Vite 7** - Lightning-fast development and optimized builds
 - ⚛️ **React 19** - Latest React features and performance improvements
 - 📘 **TypeScript 5** - Type-safe development with latest TypeScript
+- 🔐 **Firebase Authentication** - Secure email/password and Google OAuth sign-in
 - 🎨 **Tailwind CSS 3** - Utility-first CSS with custom theme
-- 🔄 **React Router v6** - Client-side routing
+- 🔄 **React Router v6** - Client-side routing with protected routes
 - 🔍 **TanStack Query v5** - Powerful server state management
 - 🐻 **Zustand** - Lightweight global state management
 - 📡 **Axios** - Promise-based HTTP client with interceptors
@@ -39,6 +40,12 @@ cp .env.example .env
 ```
 
 4. Update environment variables in `.env` as needed.
+
+5. **Set up Firebase Authentication** (Required for auth features):
+```bash
+# Follow the detailed guide in FIREBASE_SETUP.md
+# Add your Firebase credentials to .env
+```
 
 ## 🏃 Development
 
@@ -89,16 +96,19 @@ npm run format
 ```
 src/
 ├── components/          # React components
+│   ├── auth/           # Authentication components (ProtectedRoute)
 │   ├── common/         # Reusable UI components (Button, Modal, etc.)
 │   └── layout/         # Layout components
-├── pages/              # Page components
+├── contexts/           # React contexts (AuthContext)
+├── pages/              # Page components (Login, SignUp, Profile, etc.)
 ├── hooks/              # Custom React hooks
-├── services/           # API services
+├── services/           # API services and auth service
 ├── store/              # Zustand stores
 ├── types/              # TypeScript type definitions
 ├── utils/              # Utility functions
 └── lib/                # Library configurations
-    ├── axios.ts        # Axios configuration
+    ├── axios.ts        # Axios configuration with Firebase token injection
+    ├── firebase.ts     # Firebase initialization
     └── query-client.ts # TanStack Query configuration
 ```
 
@@ -129,10 +139,98 @@ Toast notifications with types: `success`, `error`, `warning`, `info`.
 Create a `.env` file based on `.env.example`:
 
 ```env
+# API Configuration
 VITE_API_BASE_URL=http://localhost:3000/api
+
+# App Configuration
 VITE_APP_NAME=ReceiptScan.ai
 VITE_APP_ENV=development
+
+# Firebase Configuration (see FIREBASE_SETUP.md for details)
+VITE_FIREBASE_API_KEY=your-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
 ```
+
+**Important**: Never commit your `.env` file with real credentials to version control.
+
+For detailed Firebase setup instructions, see [FIREBASE_SETUP.md](./FIREBASE_SETUP.md).
+
+## 🔐 Authentication
+
+The application includes a complete Firebase Authentication integration:
+
+### Features
+- **Email/Password Authentication** - Secure user registration and login
+- **Google OAuth** - One-click sign in with Google
+- **Protected Routes** - Automatic redirect for unauthenticated users
+- **Password Reset** - Self-service password recovery via email
+- **User Profile Management** - Update display name and view account info
+- **Session Persistence** - Stay logged in across page refreshes
+- **Automatic Token Refresh** - Seamless token management
+
+### Usage
+
+#### Using the Auth Hook
+
+```typescript
+import { useAuth } from './contexts/useAuth';
+
+function MyComponent() {
+  const { user, loading, signIn, signOut } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <div>Not authenticated</div>;
+
+  return (
+    <div>
+      <p>Welcome, {user.displayName || user.email}!</p>
+      <button onClick={signOut}>Logout</button>
+    </div>
+  );
+}
+```
+
+#### Creating Protected Routes
+
+```typescript
+import { ProtectedRoute } from './components/auth';
+
+<Route
+  path="/dashboard"
+  element={
+    <ProtectedRoute>
+      <DashboardPage />
+    </ProtectedRoute>
+  }
+/>
+```
+
+#### Available Auth Methods
+
+```typescript
+const {
+  user,                      // Current user object or null
+  loading,                   // Auth state loading indicator
+  signIn,                    // Sign in with email/password
+  signUp,                    // Create new account
+  signInWithGoogleProvider,  // Sign in with Google
+  logout,                    // Sign out current user
+  sendPasswordReset,         // Send password reset email
+  updateProfile,             // Update user profile
+  getToken,                  // Get current Firebase ID token
+} = useAuth();
+```
+
+### Pages
+
+- `/login` - Sign in with email/password or Google
+- `/signup` - Create a new account
+- `/forgot-password` - Request password reset
+- `/profile` - User profile management (protected)
 
 ### Tailwind Theme
 
