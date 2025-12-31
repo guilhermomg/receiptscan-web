@@ -123,7 +123,11 @@ const ProfilePage: React.FC = () => {
             <div className="flex justify-between">
               <dt className="text-sm font-medium text-gray-500">Authentication Method</dt>
               <dd className="text-sm text-gray-900">
-                {user?.email?.includes('@') ? 'Email/Password' : 'OAuth Provider'}
+                {user?.providerId === 'google.com'
+                  ? 'Google'
+                  : user?.providerId === 'password'
+                    ? 'Email/Password'
+                    : user?.providerId || 'Unknown'}
               </dd>
             </div>
           </dl>
