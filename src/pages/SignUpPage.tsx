@@ -17,6 +17,13 @@ const SignUpPage: React.FC = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      addToast('Please enter a valid email address', 'error');
+      return;
+    }
+
     if (password !== confirmPassword) {
       addToast('Passwords do not match', 'error');
       return;
