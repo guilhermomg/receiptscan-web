@@ -44,7 +44,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
             <span className="font-semibold">
               {receipt.processedData?.merchant || 'Unknown Merchant'}
             </span>
-            {receipt.processedData?.total && (
+            {receipt.processedData?.total !== undefined && (
               <span>
                 {' '}
                 for{' '}

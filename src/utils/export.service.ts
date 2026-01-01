@@ -33,6 +33,9 @@ export const exportService = {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Clean up the blob URL to prevent memory leaks
+    URL.revokeObjectURL(url);
   },
 
   // Export receipts to PDF

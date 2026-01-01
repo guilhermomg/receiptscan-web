@@ -45,9 +45,8 @@ const docToReceipt = (docSnap: DocumentSnapshot): StoredReceipt | null => {
 };
 
 // Convert StoredReceipt to Firestore data
-const receiptToDoc = (receipt: Partial<StoredReceipt>) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const doc: any = { ...receipt };
+const receiptToDoc = (receipt: Partial<StoredReceipt>): Record<string, unknown> => {
+  const doc: Record<string, unknown> = { ...receipt };
   if (receipt.createdAt) {
     doc.createdAt = Timestamp.fromDate(receipt.createdAt);
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import Modal from '../common/Modal';
 import type { StoredReceipt } from '../../types/receipt';
 
@@ -83,7 +83,11 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span>{format(new Date(processedData.date), 'MMM d, yyyy')}</span>
+                  <span>
+                    {processedData.date && isValid(new Date(processedData.date))
+                      ? format(new Date(processedData.date), 'MMM d, yyyy')
+                      : 'Invalid date'}
+                  </span>
                   {getConfidenceBadge(processedData.dateConfidence)}
                 </div>
               </div>
