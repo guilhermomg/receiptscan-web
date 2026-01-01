@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { Button } from '../common';
+import { formatPriceDecimal } from '../../utils/priceUtils';
 
 interface CheckoutFormProps {
   onSuccess: () => void;
@@ -38,11 +39,14 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
         return;
       }
 
+      // Get base URL from environment or use current origin as fallback
+      const baseUrl = import.meta.env.VITE_APP_BASE_URL || window.location.origin;
+
       // Confirm the payment
       const { error: confirmError } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/billing?success=true`,
+          return_url: `${baseUrl}/billing?success=true`,
         },
       });
 
@@ -69,7 +73,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({
         </div>
         <div className="mt-2 flex justify-between text-sm">
           <span className="text-gray-600">Amount:</span>
-          <span className="font-semibold text-gray-900">${(amount / 100).toFixed(2)}/month</span>
+          <span className="font-semibold text-gray-900">{formatPriceDecimal(amount)}/month</span>
         </div>
       </div>
 

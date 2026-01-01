@@ -26,8 +26,11 @@ export const getSubscription = async (): Promise<Subscription | null> => {
     return response.data;
   } catch (error) {
     // Return null if no subscription exists (free tier)
-    if ((error as { response?: { status?: number } }).response?.status === 404) {
-      return null;
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { status?: number } };
+      if (axiosError.response?.status === 404) {
+        return null;
+      }
     }
     throw error;
   }

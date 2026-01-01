@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Plan } from '../../types/subscription';
 import { Button } from '../common';
+import { formatPrice, formatReceiptLimit } from '../../utils/priceUtils';
 
 interface PricingCardProps {
   plan: Plan;
@@ -17,16 +18,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 }) => {
   const isCurrentPlan = currentPlanId === plan.id;
   const isFree = plan.price === 0;
-
-  const formatPrice = (priceInCents: number) => {
-    if (priceInCents === 0) return 'Free';
-    return `$${(priceInCents / 100).toFixed(0)}`;
-  };
-
-  const formatReceiptLimit = (limit: number) => {
-    if (limit === -1) return 'Unlimited';
-    return limit.toString();
-  };
 
   return (
     <div

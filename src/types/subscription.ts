@@ -13,7 +13,7 @@ export interface Plan {
   id: string;
   name: string;
   tier: PlanTier;
-  price: number; // in cents
+  price: number; // Price in cents per billing interval
   interval: 'month' | 'year';
   features: PlanFeatures;
   stripePriceId?: string;

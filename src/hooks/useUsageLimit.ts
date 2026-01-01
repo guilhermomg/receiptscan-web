@@ -25,22 +25,20 @@ export const useUsageLimit = () => {
     return Math.max(0, usage.receiptsLimit - usage.receiptsProcessedThisMonth);
   };
 
-  const canProcessReceipt = () => {
-    return !hasReachedLimit();
-  };
-
   const getUsagePercentage = () => {
     if (!usage || usage.receiptsLimit === -1) return 0;
 
     return Math.min((usage.receiptsProcessedThisMonth / usage.receiptsLimit) * 100, 100);
   };
 
+  const limitReached = hasReachedLimit();
+
   return {
     usage,
     planTier,
-    hasReachedLimit: hasReachedLimit(),
+    hasReachedLimit: limitReached,
     remainingReceipts: getRemainingReceipts(),
-    canProcessReceipt: canProcessReceipt(),
+    canProcessReceipt: !limitReached,
     usagePercentage: getUsagePercentage(),
   };
 };

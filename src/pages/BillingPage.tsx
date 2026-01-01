@@ -30,8 +30,9 @@ export const BillingPage: React.FC = () => {
       setShowSuccess(true);
       refreshSubscription();
       // Remove the success parameter from URL
-      searchParams.delete('success');
-      navigate('/billing', { replace: true });
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete('success');
+      navigate(`/billing?${newSearchParams.toString()}`, { replace: true });
     }
   }, [searchParams, navigate, refreshSubscription]);
 

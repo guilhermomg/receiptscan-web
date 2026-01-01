@@ -2,6 +2,7 @@ import React from 'react';
 import type { Invoice } from '../../types/billing';
 import { format } from 'date-fns';
 import { Button } from '../common';
+import { formatPriceDecimal } from '../../utils/priceUtils';
 
 interface BillingHistoryProps {
   invoices: Invoice[];
@@ -96,7 +97,7 @@ export const BillingHistory: React.FC<BillingHistoryProps> = ({ invoices }) => {
                   {format(new Date(invoice.created), 'MMM d, yyyy')}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                  ${(invoice.amountPaid / 100).toFixed(2)} {invoice.currency.toUpperCase()}
+                  {formatPriceDecimal(invoice.amountPaid)} {invoice.currency.toUpperCase()}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm">
                   {getStatusBadge(invoice.status)}

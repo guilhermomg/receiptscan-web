@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from '../common';
 import { PLANS } from '../../types/subscription';
 import type { PlanTier } from '../../types/subscription';
+import { formatPriceDecimal } from '../../utils/priceUtils';
 
 interface UsageLimitModalProps {
   isOpen: boolean;
@@ -68,7 +69,7 @@ export const UsageLimitModal: React.FC<UsageLimitModalProps> = ({
               {nextPlan.features.receiptsPerMonth === -1
                 ? 'unlimited'
                 : nextPlan.features.receiptsPerMonth}{' '}
-              receipts per month for just ${(nextPlan.price / 100).toFixed(2)}/month
+              receipts per month for just {formatPriceDecimal(nextPlan.price)}/month
             </p>
             <ul className="mt-3 space-y-2 text-sm text-gray-600">
               <li className="flex items-center">
