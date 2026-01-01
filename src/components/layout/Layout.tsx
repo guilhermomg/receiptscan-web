@@ -58,6 +58,14 @@ const Layout: React.FC = () => {
                   Receipts
                 </Link>
               )}
+              {user && (
+                <Link
+                  to="/analytics"
+                  className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Analytics
+                </Link>
+              )}
 
               {user ? (
                 <div className="relative">

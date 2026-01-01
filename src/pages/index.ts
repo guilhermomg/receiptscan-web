@@ -5,5 +5,6 @@ export { default as SignUpPage } from './SignUpPage';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
 export { default as ProfilePage } from './ProfilePage';
 export { default as ReceiptsPage } from './ReceiptsPage';
+export { default as AnalyticsPage } from './AnalyticsPage';
 export { PricingPage } from './PricingPage';
 export { BillingPage } from './BillingPage';

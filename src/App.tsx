@@ -9,6 +9,7 @@ import {
   ForgotPasswordPage,
   ProfilePage,
   ReceiptsPage,
+  AnalyticsPage,
   PricingPage,
   BillingPage,
 } from './pages';
@@ -37,6 +38,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReceiptsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="analytics"
+            element={
+              <ProtectedRoute>
+                <AnalyticsPage />
               </ProtectedRoute>
             }
           />
