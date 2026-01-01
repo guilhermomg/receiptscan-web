@@ -46,3 +46,35 @@ export const DEFAULT_UPLOAD_CONFIG: UploadConfig = {
   allowedFormats: ['image/jpeg', 'image/png', 'image/heic'],
   maxFiles: 10,
 };
+
+// Stored receipt represents a receipt saved to the database
+export interface StoredReceipt {
+  id: string;
+  userId: string;
+  imageUrl: string;
+  thumbnailUrl?: string;
+  fileName: string;
+  processedData?: ProcessedReceiptData;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  createdAt: Date;
+  updatedAt: Date;
+  error?: string;
+}
+
+// Filter and sort options for receipt list
+export interface ReceiptFilters {
+  search?: string;
+  category?: string;
+  dateFrom?: Date;
+  dateTo?: Date;
+  minAmount?: number;
+  maxAmount?: number;
+}
+
+export type ReceiptSortField = 'date' | 'amount' | 'merchant' | 'createdAt';
+export type SortDirection = 'asc' | 'desc';
+
+export interface ReceiptSortOptions {
+  field: ReceiptSortField;
+  direction: SortDirection;
+}

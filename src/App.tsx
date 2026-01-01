@@ -8,6 +8,7 @@ import {
   SignUpPage,
   ForgotPasswordPage,
   ProfilePage,
+  ReceiptsPage,
 } from './pages';
 
 function App() {
@@ -25,6 +26,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="receipts"
+            element={
+              <ProtectedRoute>
+                <ReceiptsPage />
               </ProtectedRoute>
             }
           />
