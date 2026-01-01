@@ -39,7 +39,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
               cy="50%"
               labelLine={false}
               label={(entry) =>
-                `${entry.name}: ${entry.percent ? (entry.percent * 100).toFixed(1) : 0}%`
+                `${entry.name}: ${entry.percent ? entry.percent.toFixed(1) : 0}%`
               }
               outerRadius={100}
               fill="#8884d8"

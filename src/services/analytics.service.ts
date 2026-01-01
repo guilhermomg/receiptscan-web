@@ -236,11 +236,10 @@ function calculateMonthlyComparison(receipts: StoredReceipt[]): MonthlyCompariso
       year: data.year,
       amount: data.amount,
       count: data.count,
+      sortKey: monthKey, // Keep for proper sorting
     }))
-    .sort((a, b) => {
-      if (a.year !== b.year) return a.year - b.year;
-      return a.month.localeCompare(b.month);
-    });
+    .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
+    .map(({ sortKey, ...rest }) => rest); // Remove sortKey from final result
 }
 
 // Calculate tax deductible expenses
