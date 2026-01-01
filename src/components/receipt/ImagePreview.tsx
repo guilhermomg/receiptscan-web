@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Receipt } from '../../types/receipt';
 import { Button } from '../common';
+import ReceiptProcessor from './ReceiptProcessor';
 
 interface ImagePreviewProps {
   receipt: Receipt;
@@ -152,6 +153,9 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ receipt, onRemove, onRetry 
             )}
           </div>
         )}
+
+        {/* Receipt Processing Integration */}
+        {receipt.status === 'uploaded' && <ReceiptProcessor receipt={receipt} />}
       </div>
     </div>
   );
