@@ -41,7 +41,9 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
         <div className="bg-gray-50 rounded-lg p-4">
           <p className="text-sm text-gray-700">
             You are about to delete the receipt from{' '}
-            <span className="font-semibold">{receipt.processedData?.merchant || 'Unknown Merchant'}</span>
+            <span className="font-semibold">
+              {receipt.processedData?.merchant || 'Unknown Merchant'}
+            </span>
             {receipt.processedData?.total && (
               <span>
                 {' '}
@@ -57,20 +59,10 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
         </div>
 
         <div className="flex gap-3 pt-4">
-          <Button
-            variant="danger"
-            onClick={onConfirm}
-            disabled={isDeleting}
-            className="flex-1"
-          >
+          <Button variant="danger" onClick={onConfirm} disabled={isDeleting} className="flex-1">
             {isDeleting ? 'Deleting...' : 'Delete Receipt'}
           </Button>
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={isDeleting}
-            className="flex-1"
-          >
+          <Button variant="outline" onClick={onClose} disabled={isDeleting} className="flex-1">
             Cancel
           </Button>
         </div>

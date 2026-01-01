@@ -153,7 +153,10 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
                 <label className="block text-sm font-medium text-gray-700 mb-2">Items</label>
                 <div className="space-y-2">
                   {processedData.items.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    >
                       <div className="flex-1">
                         <div className="font-medium">{item.description}</div>
                         <div className="text-sm text-gray-600">

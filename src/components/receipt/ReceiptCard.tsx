@@ -30,7 +30,7 @@ export const ReceiptCard: React.FC<ReceiptCardProps> = ({ receipt, onView, onEdi
       <div onClick={() => onView(receipt)}>
         {/* Receipt Image */}
         <div className="aspect-[3/4] bg-gray-100 rounded-md mb-3 overflow-hidden">
-          {(thumbnailUrl || imageUrl) ? (
+          {thumbnailUrl || imageUrl ? (
             <img
               src={thumbnailUrl || imageUrl}
               alt={processedData?.merchant || 'Receipt'}
@@ -56,9 +56,7 @@ export const ReceiptCard: React.FC<ReceiptCardProps> = ({ receipt, onView, onEdi
             <h3 className="font-semibold text-gray-900 line-clamp-1">
               {processedData?.merchant || 'Unknown Merchant'}
             </h3>
-            <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor()}`}>
-              {status}
-            </span>
+            <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor()}`}>{status}</span>
           </div>
 
           {processedData?.date && (
@@ -79,9 +77,7 @@ export const ReceiptCard: React.FC<ReceiptCardProps> = ({ receipt, onView, onEdi
             )}
           </div>
 
-          <p className="text-xs text-gray-500">
-            Added {format(createdAt, 'MMM d, yyyy')}
-          </p>
+          <p className="text-xs text-gray-500">Added {format(createdAt, 'MMM d, yyyy')}</p>
         </div>
       </div>
 

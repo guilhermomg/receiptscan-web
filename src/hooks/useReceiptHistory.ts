@@ -1,7 +1,12 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/useAuth';
 import { receiptHistoryService } from '../services/receipt-history.service';
-import type { StoredReceipt, ProcessedReceiptData, ReceiptFilters, ReceiptSortOptions } from '../types/receipt';
+import type {
+  StoredReceipt,
+  ProcessedReceiptData,
+  ReceiptFilters,
+  ReceiptSortOptions,
+} from '../types/receipt';
 import { DocumentSnapshot } from 'firebase/firestore';
 
 // Query keys
@@ -15,17 +20,14 @@ export const receiptHistoryKeys = {
 };
 
 // Hook to get receipts with infinite scroll
-export const useReceiptHistory = (
-  filters?: ReceiptFilters,
-  sort?: ReceiptSortOptions
-) => {
+export const useReceiptHistory = (filters?: ReceiptFilters, sort?: ReceiptSortOptions) => {
   const { user } = useAuth();
 
   return useInfiniteQuery({
     queryKey: receiptHistoryKeys.list(user?.uid || '', filters, sort),
     queryFn: async ({ pageParam }: { pageParam: DocumentSnapshot | undefined }) => {
       if (!user?.uid) throw new Error('User not authenticated');
-      
+
       return receiptHistoryService.getReceipts({
         userId: user.uid,
         filters,
@@ -59,7 +61,9 @@ export const useCreateReceipt = () => {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async (receipt: Omit<StoredReceipt, 'id' | 'userId' | 'createdAt' | 'updatedAt'>) => {
+    mutationFn: async (
+      receipt: Omit<StoredReceipt, 'id' | 'userId' | 'createdAt' | 'updatedAt'>
+    ) => {
       if (!user?.uid) throw new Error('User not authenticated');
       return receiptHistoryService.createReceipt({
         ...receipt,

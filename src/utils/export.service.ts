@@ -56,10 +56,7 @@ export const exportService = {
     yPosition += 15;
 
     // Statistics
-    const totalAmount = receipts.reduce(
-      (sum, r) => sum + (r.processedData?.total || 0),
-      0
-    );
+    const totalAmount = receipts.reduce((sum, r) => sum + (r.processedData?.total || 0), 0);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(`Total Receipts: ${receipts.length}`, margin, yPosition);

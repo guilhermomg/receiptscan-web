@@ -24,6 +24,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
     }, 300);
 
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue]);
 
   const handleSortFieldChange = (field: ReceiptSortField) => {
@@ -42,11 +43,11 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
     onFiltersChange({});
   };
 
-  const hasActiveFilters = 
-    filters.category || 
-    filters.dateFrom || 
-    filters.dateTo || 
-    filters.minAmount !== undefined || 
+  const hasActiveFilters =
+    filters.category ||
+    filters.dateFrom ||
+    filters.dateTo ||
+    filters.minAmount !== undefined ||
     filters.maxAmount !== undefined;
 
   return (
@@ -97,11 +98,21 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
           >
             {sort.direction === 'asc' ? (
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 15l7-7 7 7"
+                />
               </svg>
             ) : (
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             )}
           </button>
@@ -143,7 +154,9 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
             <input
               type="text"
               value={filters.category || ''}
-              onChange={(e) => onFiltersChange({ ...filters, category: e.target.value || undefined })}
+              onChange={(e) =>
+                onFiltersChange({ ...filters, category: e.target.value || undefined })
+              }
               placeholder="e.g., Food"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />

@@ -46,6 +46,7 @@ const docToReceipt = (docSnap: DocumentSnapshot): StoredReceipt | null => {
 
 // Convert StoredReceipt to Firestore data
 const receiptToDoc = (receipt: Partial<StoredReceipt>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const doc: any = { ...receipt };
   if (receipt.createdAt) {
     doc.createdAt = Timestamp.fromDate(receipt.createdAt);
@@ -212,7 +213,9 @@ export const receiptHistoryService = {
   },
 
   // Get receipt statistics
-  getStatistics: async (userId: string): Promise<{
+  getStatistics: async (
+    userId: string
+  ): Promise<{
     totalReceipts: number;
     totalAmount: number;
     byCategory: Record<string, { count: number; total: number }>;

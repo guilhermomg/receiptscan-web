@@ -58,7 +58,7 @@ const ReceiptsPage: React.FC = () => {
       addToast('Receipt deleted successfully', 'success');
       setIsDeleteModalOpen(false);
       setReceiptToDelete(null);
-    } catch (error) {
+    } catch {
       addToast('Failed to delete receipt', 'error');
     }
   };

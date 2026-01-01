@@ -10,11 +10,7 @@ interface ReceiptEditModalProps {
   receipt: StoredReceipt | null;
 }
 
-export const ReceiptEditModal: React.FC<ReceiptEditModalProps> = ({
-  isOpen,
-  onClose,
-  receipt,
-}) => {
+export const ReceiptEditModal: React.FC<ReceiptEditModalProps> = ({ isOpen, onClose, receipt }) => {
   const updateMutation = useUpdateReceiptData();
   const { addToast } = useToast();
 
@@ -31,7 +27,7 @@ export const ReceiptEditModal: React.FC<ReceiptEditModalProps> = ({
       });
       addToast('Receipt updated successfully', 'success');
       onClose();
-    } catch (error) {
+    } catch {
       addToast('Failed to update receipt', 'error');
     }
   };
