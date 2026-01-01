@@ -9,6 +9,8 @@ import {
   ForgotPasswordPage,
   ProfilePage,
   ReceiptsPage,
+  PricingPage,
+  BillingPage,
 } from './pages';
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
+          <Route path="pricing" element={<PricingPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignUpPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
@@ -34,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ReceiptsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="billing"
+            element={
+              <ProtectedRoute>
+                <BillingPage />
               </ProtectedRoute>
             }
           />

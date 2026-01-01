@@ -44,6 +44,12 @@ const Layout: React.FC = () => {
               >
                 About
               </Link>
+              <Link
+                to="/pricing"
+                className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Pricing
+              </Link>
               {user && (
                 <Link
                   to="/receipts"
@@ -104,6 +110,13 @@ const Layout: React.FC = () => {
                             onClick={() => setIsMenuOpen(false)}
                           >
                             Profile
+                          </Link>
+                          <Link
+                            to="/billing"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            Billing
                           </Link>
                           <button
                             onClick={() => {
