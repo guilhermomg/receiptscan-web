@@ -15,6 +15,9 @@ Modern web application for AI-powered receipt scanning and expense management bu
 - 📡 **Axios** - Promise-based HTTP client with interceptors
 - ✅ **ESLint & Prettier** - Code quality and formatting
 - 🧩 **Common UI Components** - Button, Modal, Spinner, Toast
+- 📱 **Progressive Web App (PWA)** - Installable app with offline support
+- 📲 **Mobile Responsive** - Optimized for mobile devices with touch gestures
+- 🎯 **Touch Gestures** - Pinch-to-zoom and pan for image viewing
 
 ## 📋 Prerequisites
 
@@ -346,6 +349,44 @@ Routes are configured in `src/App.tsx`:
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+## 📱 Progressive Web App (PWA)
+
+The application is configured as a Progressive Web App with the following features:
+
+### Features
+- **Installable** - Can be installed on mobile and desktop devices
+- **Offline Support** - Service worker caches assets and API responses for offline access
+- **App-like Experience** - Runs in standalone mode when installed
+- **Touch Gestures** - Pinch-to-zoom and pan gestures for image viewing
+- **Mobile Optimized** - Responsive design with hamburger menu navigation
+
+### Configuration
+PWA settings are configured in `vite.config.ts` using the `vite-plugin-pwa` plugin:
+- **Manifest** - App metadata, icons, and display settings
+- **Service Worker** - Workbox-based caching strategies
+- **Offline Caching** - Assets, fonts, and API responses
+
+### Installation
+Users will see an install prompt when visiting the app. They can also install manually:
+- **Chrome/Edge**: Click the install icon in the address bar
+- **iOS Safari**: Tap Share → Add to Home Screen
+- **Android**: Tap the menu → Install app
+
+### Icons
+The PWA icons are located in `public/`:
+- `pwa-192x192.png` - 192x192 icon for Android
+- `pwa-512x512.png` - 512x512 icon for Android and desktop
+- `apple-touch-icon.png` - 180x180 icon for iOS
+
+**Note**: The current icon files are minimal placeholders. For production, replace them with proper branded icons using tools like [PWA Asset Generator](https://github.com/elegantapp/pwa-asset-generator).
+
+### Testing PWA
+1. Build the app: `npm run build`
+2. Preview: `npm run preview`
+3. Open Chrome DevTools → Application → Service Workers
+4. Test offline: Network tab → Throttling → Offline
+5. Run Lighthouse audit: DevTools → Lighthouse → Progressive Web App
 
 ## 📄 License
 
