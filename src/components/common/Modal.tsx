@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-screen items-end sm:items-center justify-center p-0 sm:p-4">
         {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
@@ -46,17 +46,20 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
         ></div>
 
         {/* Modal */}
-        <div className={`relative bg-white rounded-lg shadow-xl ${sizeStyles[size]} w-full p-6`}>
+        <div
+          className={`relative bg-white rounded-t-lg sm:rounded-lg shadow-xl ${sizeStyles[size]} w-full p-4 sm:p-6 max-h-[90vh] overflow-y-auto`}
+        >
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{title}</h3>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                aria-label="Close modal"
               >
                 <svg
-                  className="h-6 w-6"
+                  className="h-5 w-5 sm:h-6 sm:w-6"
                   fill="none"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -71,7 +74,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
           )}
 
           {/* Content */}
-          <div>{children}</div>
+          <div className="text-sm sm:text-base">{children}</div>
         </div>
       </div>
     </div>

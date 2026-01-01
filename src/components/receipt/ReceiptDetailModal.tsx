@@ -1,6 +1,7 @@
 import React from 'react';
 import { format, isValid } from 'date-fns';
 import Modal from '../common/Modal';
+import { TouchableImage } from '../common';
 import type { StoredReceipt } from '../../types/receipt';
 
 interface ReceiptDetailModalProps {
@@ -34,22 +35,22 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Receipt Details" size="lg">
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Receipt Image */}
-        <div className="flex justify-center bg-gray-50 rounded-lg p-4">
-          <img
+        <div className="bg-gray-50 rounded-lg overflow-hidden" style={{ height: '300px' }}>
+          <TouchableImage
             src={imageUrl}
             alt={processedData?.merchant || 'Receipt'}
-            className="max-h-96 rounded-lg shadow-lg"
+            className="w-full h-full"
           />
         </div>
 
         {/* Status and Dates */}
-        <div className="flex items-center justify-between text-sm text-gray-600">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs sm:text-sm text-gray-600">
           <div>
             <span className="font-medium">Status:</span>{' '}
             <span
-              className={`px-2 py-1 rounded ${
+              className={`px-2 py-1 rounded text-xs ${
                 status === 'completed'
                   ? 'bg-green-100 text-green-800'
                   : status === 'processing'
@@ -62,7 +63,7 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
               {status}
             </span>
           </div>
-          <div>
+          <div className="text-xs sm:text-sm">
             <span className="font-medium">Added:</span> {format(createdAt, 'MMM d, yyyy h:mm a')}
           </div>
         </div>
@@ -71,18 +72,22 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
           <>
             {/* Merchant */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Merchant</label>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <span className="text-lg font-semibold">{processedData.merchant}</span>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Merchant
+              </label>
+              <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
+                <span className="text-base sm:text-lg font-semibold">{processedData.merchant}</span>
                 {getConfidenceBadge(processedData.merchantConfidence)}
               </div>
             </div>
 
             {/* Date and Total */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Date
+                </label>
+                <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg text-sm">
                   <span>
                     {processedData.date && isValid(new Date(processedData.date))
                       ? format(new Date(processedData.date), 'MMM d, yyyy')
@@ -92,9 +97,11 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Total</label>
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-lg font-bold">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Total
+                </label>
+                <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
+                  <span className="text-base sm:text-lg font-bold">
                     {processedData.currency || '$'}
                     {processedData.total.toFixed(2)}
                   </span>
@@ -105,21 +112,23 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
 
             {/* Category and Payment Method */}
             {(processedData.category || processedData.paymentMethod) && (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {processedData.category && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                    <div className="p-3 bg-blue-50 text-blue-700 rounded-lg">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Category
+                    </label>
+                    <div className="p-2 sm:p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">
                       {processedData.category}
                     </div>
                   </div>
                 )}
                 {processedData.paymentMethod && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       Payment Method
                     </label>
-                    <div className="p-3 bg-purple-50 text-purple-700 rounded-lg">
+                    <div className="p-2 sm:p-3 bg-purple-50 text-purple-700 rounded-lg text-sm">
                       {processedData.paymentMethod}
                     </div>
                   </div>
@@ -129,11 +138,13 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
 
             {/* Subtotal and Tax */}
             {(processedData.subtotal || processedData.tax) && (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {processedData.subtotal && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Subtotal</label>
-                    <div className="p-3 bg-gray-50 rounded-lg">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Subtotal
+                    </label>
+                    <div className="p-2 sm:p-3 bg-gray-50 rounded-lg text-sm">
                       {processedData.currency || '$'}
                       {processedData.subtotal.toFixed(2)}
                     </div>
@@ -141,8 +152,10 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
                 )}
                 {processedData.tax && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tax</label>
-                    <div className="p-3 bg-gray-50 rounded-lg">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Tax
+                    </label>
+                    <div className="p-2 sm:p-3 bg-gray-50 rounded-lg text-sm">
                       {processedData.currency || '$'}
                       {processedData.tax.toFixed(2)}
                     </div>
@@ -154,16 +167,18 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
             {/* Line Items */}
             {processedData.items && processedData.items.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Items</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+                  Items
+                </label>
                 <div className="space-y-2">
                   {processedData.items.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg text-sm"
                     >
                       <div className="flex-1">
                         <div className="font-medium">{item.description}</div>
-                        <div className="text-sm text-gray-600">
+                        <div className="text-xs text-gray-600">
                           Qty: {item.quantity} × {processedData.currency || '$'}
                           {item.price.toFixed(2)}
                         </div>
@@ -184,13 +199,13 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-3 pt-4 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-gray-200">
           <button
             onClick={() => {
               onEdit(receipt);
               onClose();
             }}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex-1 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base touch-manipulation"
           >
             Edit Receipt
           </button>
@@ -199,13 +214,13 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
               onDelete(receipt);
               onClose();
             }}
-            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="flex-1 px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base touch-manipulation"
           >
             Delete Receipt
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base touch-manipulation"
           >
             Close
           </button>
