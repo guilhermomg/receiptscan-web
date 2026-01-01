@@ -17,7 +17,11 @@ const AnalyticsPage: React.FC = () => {
   const [dateFrom, setDateFrom] = useState(subDays(new Date(), 30));
   const [dateTo, setDateTo] = useState(new Date());
 
-  const { data: analyticsData, isLoading, error } = useAnalytics({
+  const {
+    data: analyticsData,
+    isLoading,
+    error,
+  } = useAnalytics({
     dateFrom,
     dateTo,
   });
@@ -55,7 +59,12 @@ const AnalyticsPage: React.FC = () => {
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
           <div className="flex items-center gap-3">
-            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-6 h-6 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -77,9 +86,7 @@ const AnalyticsPage: React.FC = () => {
       {!isLoading && !error && analyticsData && (
         <>
           {/* Alerts */}
-          {analyticsData.alerts.length > 0 && (
-            <SpendingAlerts alerts={analyticsData.alerts} />
-          )}
+          {analyticsData.alerts.length > 0 && <SpendingAlerts alerts={analyticsData.alerts} />}
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">

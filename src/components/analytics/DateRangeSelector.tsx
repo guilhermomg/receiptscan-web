@@ -7,7 +7,13 @@ interface DateRangeSelectorProps {
   onDateRangeChange: (dateFrom: Date, dateTo: Date) => void;
 }
 
-type PresetRange = 'last7days' | 'last30days' | 'last3months' | 'thisMonth' | 'lastMonth' | 'custom';
+type PresetRange =
+  | 'last7days'
+  | 'last30days'
+  | 'last3months'
+  | 'thisMonth'
+  | 'lastMonth'
+  | 'custom';
 
 export const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
   dateFrom,
@@ -39,11 +45,12 @@ export const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
         newDateFrom = startOfMonth(today);
         newDateTo = endOfMonth(today);
         break;
-      case 'lastMonth':
+      case 'lastMonth': {
         const lastMonth = subMonths(today, 1);
         newDateFrom = startOfMonth(lastMonth);
         newDateTo = endOfMonth(lastMonth);
         break;
+      }
       default:
         return;
     }
@@ -63,7 +70,7 @@ export const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <label className="block text-sm font-medium text-gray-700 mb-3">Date Range</label>
-      
+
       {/* Preset Buttons */}
       <div className="flex flex-wrap gap-2 mb-4">
         <button

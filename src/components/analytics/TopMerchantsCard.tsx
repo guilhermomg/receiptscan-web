@@ -40,9 +40,7 @@ export const TopMerchantsCard: React.FC<TopMerchantsCardProps> = ({ merchants })
             {/* Merchant Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="text-sm font-medium text-gray-900 truncate">
-                  {merchant.merchant}
-                </h3>
+                <h3 className="text-sm font-medium text-gray-900 truncate">{merchant.merchant}</h3>
                 <span className="text-sm font-bold text-gray-900">
                   ${merchant.amount.toFixed(2)}
                 </span>

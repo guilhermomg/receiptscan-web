@@ -43,9 +43,7 @@ export const TaxDeductibleSummary: React.FC<TaxDeductibleSummaryProps> = ({ data
               <div key={category}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm text-gray-700">{category}</span>
-                  <span className="text-sm font-semibold text-gray-900">
-                    ${amount.toFixed(2)}
-                  </span>
+                  <span className="text-sm font-semibold text-gray-900">${amount.toFixed(2)}</span>
                 </div>
                 <div className="bg-gray-200 rounded-full h-2">
                   <div

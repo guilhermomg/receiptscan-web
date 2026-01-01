@@ -46,9 +46,7 @@ export const MonthlyComparisonChart: React.FC<MonthlyComparisonChartProps> = ({ 
                 padding: '12px',
               }}
               formatter={(value: number | undefined, name: string | undefined) => [
-                name === 'amount'
-                  ? `$${(value || 0).toFixed(2)}`
-                  : `${value || 0} receipts`,
+                name === 'amount' ? `$${(value || 0).toFixed(2)}` : `${value || 0} receipts`,
                 name === 'amount' ? 'Amount' : 'Receipts',
               ]}
             />

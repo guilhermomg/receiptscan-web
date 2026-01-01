@@ -26,6 +26,7 @@ const TAX_DEDUCTIBLE_CATEGORIES = [
 ];
 
 // Convert Firestore document to StoredReceipt
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const docToReceipt = (doc: any): StoredReceipt => {
   const data = doc.data();
   return {
@@ -44,10 +45,7 @@ const docToReceipt = (doc: any): StoredReceipt => {
 
 export const analyticsService = {
   // Get analytics data with filters
-  getAnalyticsData: async (
-    userId: string,
-    filters: AnalyticsFilters
-  ): Promise<AnalyticsData> => {
+  getAnalyticsData: async (userId: string, filters: AnalyticsFilters): Promise<AnalyticsData> => {
     // Query receipts
     const q = query(
       collection(db, RECEIPTS_COLLECTION),
@@ -90,10 +88,7 @@ export const analyticsService = {
     const taxDeductible = calculateTaxDeductible(receipts);
     const alerts = generateAlerts(receipts, filters);
 
-    const totalSpending = receipts.reduce(
-      (sum, r) => sum + (r.processedData?.total || 0),
-      0
-    );
+    const totalSpending = receipts.reduce((sum, r) => sum + (r.processedData?.total || 0), 0);
     const transactionCount = receipts.length;
     const averageTransaction = transactionCount > 0 ? totalSpending / transactionCount : 0;
 
@@ -146,16 +141,10 @@ function calculateSpendingTrends(
   const startDate = new Date(filters.dateFrom);
   const endDate = new Date(filters.dateTo);
 
-  for (
-    let d = new Date(startDate);
-    d <= endDate;
-    d.setDate(d.getDate() + 1)
-  ) {
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
     const dateStr = format(d, 'yyyy-MM-dd');
     const existing = result.find((t) => t.date === dateStr);
-    filledResult.push(
-      existing || { date: dateStr, amount: 0, count: 0 }
-    );
+    filledResult.push(existing || { date: dateStr, amount: 0, count: 0 });
   }
 
   return filledResult;
@@ -190,10 +179,7 @@ function calculateCategoryBreakdown(receipts: StoredReceipt[]): CategoryData[] {
 
 // Calculate top merchants
 function calculateTopMerchants(receipts: StoredReceipt[]): MerchantData[] {
-  const merchants = new Map<
-    string,
-    { amount: number; count: number; lastVisit: Date }
-  >();
+  const merchants = new Map<string, { amount: number; count: number; lastVisit: Date }>();
 
   receipts.forEach((receipt) => {
     const merchant = receipt.processedData?.merchant || 'Unknown';
@@ -285,10 +271,7 @@ function calculateTaxDeductible(receipts: StoredReceipt[]): TaxDeductibleData {
 }
 
 // Generate spending alerts
-function generateAlerts(
-  receipts: StoredReceipt[],
-  filters: AnalyticsFilters
-): SpendingAlert[] {
+function generateAlerts(receipts: StoredReceipt[], filters: AnalyticsFilters): SpendingAlert[] {
   const alerts: SpendingAlert[] = [];
 
   // Calculate average spending per day
@@ -299,9 +282,7 @@ function generateAlerts(
 
   // Check for overspending (if last 7 days is 50% more than average)
   const last7Days = receipts.filter((r) => {
-    const receiptDate = r.processedData?.date
-      ? parseISO(r.processedData.date)
-      : r.createdAt;
+    const receiptDate = r.processedData?.date ? parseISO(r.processedData.date) : r.createdAt;
     return receiptDate >= subDays(filters.dateTo, 7);
   });
 
