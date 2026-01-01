@@ -54,6 +54,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
                 borderRadius: '8px',
                 padding: '12px',
               }}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: number | undefined, name: string | undefined, props: any) => [
                 `$${(value || 0).toFixed(2)} (${props.payload.count} receipts)`,
                 name || '',
