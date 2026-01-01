@@ -78,11 +78,7 @@ export const PricingPage: React.FC = () => {
           <div className="mx-auto mt-8 max-w-2xl rounded-md bg-red-50 p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -117,11 +113,10 @@ export const PricingPage: React.FC = () => {
           </h2>
           <div className="mx-auto mt-8 max-w-3xl space-y-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                Can I change my plan later?
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900">Can I change my plan later?</h3>
               <p className="mt-2 text-gray-600">
-                Yes, you can upgrade or downgrade your plan at any time from your billing page. Changes take effect immediately, with prorated billing.
+                Yes, you can upgrade or downgrade your plan at any time from your billing page.
+                Changes take effect immediately, with prorated billing.
               </p>
             </div>
             <div>
@@ -129,15 +124,15 @@ export const PricingPage: React.FC = () => {
                 What happens if I exceed my receipt limit?
               </h3>
               <p className="mt-2 text-gray-600">
-                If you reach your monthly limit, you'll be prompted to upgrade to continue processing receipts. Your existing receipts remain accessible.
+                If you reach your monthly limit, you'll be prompted to upgrade to continue
+                processing receipts. Your existing receipts remain accessible.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                Can I cancel my subscription?
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900">Can I cancel my subscription?</h3>
               <p className="mt-2 text-gray-600">
-                Yes, you can cancel anytime from your billing page. You'll retain access to paid features until the end of your billing period.
+                Yes, you can cancel anytime from your billing page. You'll retain access to paid
+                features until the end of your billing period.
               </p>
             </div>
           </div>

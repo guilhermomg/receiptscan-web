@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { Subscription, UsageStats, PlanTier } from '../types/subscription';
 import {
@@ -17,7 +17,8 @@ interface SubscriptionContextType {
   refreshUsage: () => Promise<void>;
 }
 
-const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
+// eslint-disable-next-line react-refresh/only-export-components
+export const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
 
 interface SubscriptionProviderProps {
   children: ReactNode;
@@ -30,7 +31,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   const [planTier, setPlanTier] = useState<PlanTier>('free');
   const [loading, setLoading] = useState(true);
 
-  const refreshSubscription = async () => {
+  const refreshSubscription = useCallback(async () => {
     if (!user) {
       setSubscription(null);
       setPlanTier('free');
@@ -47,9 +48,9 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
       setSubscription(null);
       setPlanTier('free');
     }
-  };
+  }, [user]);
 
-  const refreshUsage = async () => {
+  const refreshUsage = useCallback(async () => {
     if (!user) {
       setUsage(null);
       return;
@@ -62,7 +63,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
       console.error('Error fetching usage stats:', error);
       setUsage(null);
     }
-  };
+  }, [user]);
 
   // Load subscription and usage when user changes
   useEffect(() => {
@@ -82,7 +83,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     };
 
     loadData();
-  }, [user]);
+  }, [user, refreshSubscription, refreshUsage]);
 
   const value: SubscriptionContextType = {
     subscription,
@@ -94,12 +95,4 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   };
 
   return <SubscriptionContext.Provider value={value}>{children}</SubscriptionContext.Provider>;
-};
-
-export const useSubscription = () => {
-  const context = useContext(SubscriptionContext);
-  if (context === undefined) {
-    throw new Error('useSubscription must be used within a SubscriptionProvider');
-  }
-  return context;
 };

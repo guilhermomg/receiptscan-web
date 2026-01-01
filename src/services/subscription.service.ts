@@ -1,10 +1,5 @@
 import apiClient from '../lib/axios';
-import type {
-  Subscription,
-  UsageStats,
-  PaymentMethod,
-  PlanTier,
-} from '../types/subscription';
+import type { Subscription, UsageStats, PaymentMethod, PlanTier } from '../types/subscription';
 import type { Invoice, CheckoutSession } from '../types/billing';
 
 export interface CreateCheckoutSessionRequest {
@@ -31,7 +26,7 @@ export const getSubscription = async (): Promise<Subscription | null> => {
     return response.data;
   } catch (error) {
     // Return null if no subscription exists (free tier)
-    if ((error as any).response?.status === 404) {
+    if ((error as { response?: { status?: number } }).response?.status === 404) {
       return null;
     }
     throw error;
@@ -139,14 +134,14 @@ export const getCurrentPlanTier = async (): Promise<PlanTier> => {
     if (!subscription) {
       return 'free';
     }
-    
+
     // Map subscription planId to tier
     const planIdToTier: Record<string, PlanTier> = {
-      'free': 'free',
-      'basic': 'basic',
-      'pro': 'pro',
+      free: 'free',
+      basic: 'basic',
+      pro: 'pro',
     };
-    
+
     return planIdToTier[subscription.planId] || 'free';
   } catch (error) {
     console.error('Error getting current plan tier:', error);
@@ -160,12 +155,12 @@ export const getCurrentPlanTier = async (): Promise<PlanTier> => {
 export const hasReachedUsageLimit = async (): Promise<boolean> => {
   try {
     const usage = await getUsageStats();
-    
+
     // Unlimited usage
     if (usage.receiptsLimit === -1) {
       return false;
     }
-    
+
     return usage.receiptsProcessedThisMonth >= usage.receiptsLimit;
   } catch (error) {
     console.error('Error checking usage limit:', error);

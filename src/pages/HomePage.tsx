@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Modal, Spinner, useToast } from '../components/common';
 import { ReceiptUpload } from '../components/receipt';
+import { useAuth } from '../contexts';
 
 const HomePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { addToast } = useToast();
+  const { user } = useAuth();
 
   const handleButtonClick = () => {
     addToast('Welcome to ReceiptScan.ai!', 'success');
@@ -17,6 +20,18 @@ const HomePage: React.FC = () => {
         <p className="text-xl text-gray-600 mb-8">
           AI-powered receipt scanning and expense management
         </p>
+        {!user && (
+          <div className="flex justify-center gap-4">
+            <Link to="/signup">
+              <Button size="lg">Get Started Free</Button>
+            </Link>
+            <Link to="/pricing">
+              <Button variant="outline" size="lg">
+                View Pricing
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Receipt Upload Section */}
@@ -27,6 +42,23 @@ const HomePage: React.FC = () => {
         </p>
         <ReceiptUpload />
       </div>
+
+      {/* Pricing CTA */}
+      {!user && (
+        <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg shadow-lg p-8 text-white">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to streamline your expenses?</h2>
+            <p className="text-lg mb-6 opacity-90">
+              Choose a plan that fits your needs. Start with 10 free receipts per month.
+            </p>
+            <Link to="/pricing">
+              <Button variant="secondary" size="lg">
+                View All Plans
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-4 justify-center">
         <Button onClick={handleButtonClick}>Show Toast</Button>
@@ -67,6 +99,8 @@ const HomePage: React.FC = () => {
           <li>✅ Receipt upload with drag-and-drop</li>
           <li>✅ Camera integration for mobile devices</li>
           <li>✅ Image compression and validation</li>
+          <li>✅ Stripe payment integration</li>
+          <li>✅ Subscription management</li>
         </ul>
       </div>
     </div>
