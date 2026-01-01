@@ -96,7 +96,11 @@ const HomePage: React.FC = () => {
           This is a demo modal component. You can put any content here.
         </p>
         <div className="flex flex-col sm:flex-row justify-end gap-3">
-          <Button variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
+          <Button
+            variant="outline"
+            onClick={() => setIsModalOpen(false)}
+            className="w-full sm:w-auto"
+          >
             Cancel
           </Button>
           <Button onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">

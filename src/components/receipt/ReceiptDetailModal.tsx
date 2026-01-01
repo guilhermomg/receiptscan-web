@@ -72,7 +72,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
           <>
             {/* Merchant */}
             <div>
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Merchant</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Merchant
+              </label>
               <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
                 <span className="text-base sm:text-lg font-semibold">{processedData.merchant}</span>
                 {getConfidenceBadge(processedData.merchantConfidence)}
@@ -82,7 +84,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
             {/* Date and Total */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Date</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Date
+                </label>
                 <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg text-sm">
                   <span>
                     {processedData.date && isValid(new Date(processedData.date))
@@ -93,7 +97,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
                 </div>
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Total</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Total
+                </label>
                 <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
                   <span className="text-base sm:text-lg font-bold">
                     {processedData.currency || '$'}
@@ -109,7 +115,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {processedData.category && (
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Category
+                    </label>
                     <div className="p-2 sm:p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">
                       {processedData.category}
                     </div>
@@ -133,7 +141,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {processedData.subtotal && (
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Subtotal</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Subtotal
+                    </label>
                     <div className="p-2 sm:p-3 bg-gray-50 rounded-lg text-sm">
                       {processedData.currency || '$'}
                       {processedData.subtotal.toFixed(2)}
@@ -142,7 +152,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
                 )}
                 {processedData.tax && (
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tax</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Tax
+                    </label>
                     <div className="p-2 sm:p-3 bg-gray-50 rounded-lg text-sm">
                       {processedData.currency || '$'}
                       {processedData.tax.toFixed(2)}
@@ -155,7 +167,9 @@ export const ReceiptDetailModal: React.FC<ReceiptDetailModalProps> = ({
             {/* Line Items */}
             {processedData.items && processedData.items.length > 0 && (
               <div>
-                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Items</label>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
+                  Items
+                </label>
                 <div className="space-y-2">
                   {processedData.items.map((item, index) => (
                     <div

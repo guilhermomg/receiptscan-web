@@ -38,9 +38,7 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(entry) =>
-                `${entry.name}: ${entry.percent ? entry.percent.toFixed(1) : 0}%`
-              }
+              label={(entry) => `${entry.name}: ${entry.percent ? entry.percent.toFixed(1) : 0}%`}
               outerRadius={100}
               fill="#8884d8"
               dataKey="value"
@@ -56,12 +54,10 @@ export const CategoryBreakdownChart: React.FC<CategoryBreakdownChartProps> = ({ 
                 borderRadius: '8px',
                 padding: '12px',
               }}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(
-                value: number | undefined,
-                name: string | undefined,
-                props: any
-              ) => [`$${(value || 0).toFixed(2)} (${props.payload.count} receipts)`, name || '']}
+              formatter={(value: number | undefined, name: string | undefined, props: any) => [
+                `$${(value || 0).toFixed(2)} (${props.payload.count} receipts)`,
+                name || '',
+              ]}
             />
             <Legend verticalAlign="bottom" height={36} />
           </PieChart>

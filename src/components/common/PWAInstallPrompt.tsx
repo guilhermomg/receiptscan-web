@@ -14,7 +14,7 @@ const PWAInstallPrompt: React.FC = () => {
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
+
       // Check if user has previously dismissed the prompt
       const dismissed = localStorage.getItem('pwa-install-dismissed');
       if (!dismissed) {
@@ -26,6 +26,7 @@ const PWAInstallPrompt: React.FC = () => {
 
     // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowInstallPrompt(false);
     }
 
@@ -82,7 +83,12 @@ const PWAInstallPrompt: React.FC = () => {
             <Button size="sm" onClick={handleInstallClick} className="flex-1 md:flex-none">
               Install
             </Button>
-            <Button size="sm" variant="outline" onClick={handleDismiss} className="flex-1 md:flex-none">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleDismiss}
+              className="flex-1 md:flex-none"
+            >
               Not now
             </Button>
           </div>
