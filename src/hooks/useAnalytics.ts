@@ -12,7 +12,7 @@ export const useAnalytics = (filters: AnalyticsFilters) => {
       if (!user?.uid) {
         throw new Error('User not authenticated');
       }
-      return analyticsService.getAnalyticsData(user.uid, filters);
+      return analyticsService.getAnalyticsData(filters);
     },
     enabled: !!user?.uid,
     staleTime: 5 * 60 * 1000, // 5 minutes
