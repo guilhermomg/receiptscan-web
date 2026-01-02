@@ -14,6 +14,7 @@ import {
   revokePreviewUrl,
 } from '../../utils/imageUtils';
 import { useToast } from '../common';
+import { useUploadReceipt } from '../../hooks/useReceipt';
 
 interface ReceiptUploadProps {
   onUploadComplete?: (receipts: Receipt[]) => void;
@@ -23,20 +24,10 @@ const ReceiptUpload: React.FC<ReceiptUploadProps> = ({ onUploadComplete: _onUplo
   const [showCamera, setShowCamera] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { addToast } = useToast();
+  const uploadMutation = useUploadReceipt();
 
   const { receipts, addReceipt, updateReceipt, removeReceipt, clearReceipts } =
     useReceiptUploadStore();
-
-  const simulateUpload = useCallback(
-    async (receiptId: string) => {
-      // Simulate upload progress
-      for (let progress = 70; progress <= 100; progress += 10) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        updateReceipt(receiptId, { progress });
-      }
-    },
-    [updateReceipt]
-  );
 
   const processFile = useCallback(
     async (file: File) => {
@@ -73,31 +64,34 @@ const ReceiptUpload: React.FC<ReceiptUploadProps> = ({ onUploadComplete: _onUplo
 
         updateReceipt(receiptId, {
           compressedFile,
-          progress: 60,
+          progress: 50,
         });
 
-        // Simulate upload progress (in real app, this would be actual upload)
-        await simulateUpload(receiptId);
+        // Upload to backend
+        const uploadResponse = await uploadMutation.mutateAsync(compressedFile);
+        
+        if (uploadResponse.status === 'success' && uploadResponse.data) {
+          updateReceipt(receiptId, {
+            status: 'uploaded',
+            progress: 100,
+            uploadedUrl: uploadResponse.data.fileUrl,
+            backendReceiptId: uploadResponse.data.receiptId,
+          });
 
-        // TODO: Replace with actual API endpoint from environment variable
-        // Example: const uploadedUrl = await uploadToAPI(compressedFile);
-        updateReceipt(receiptId, {
-          status: 'uploaded',
-          progress: 100,
-          uploadedUrl: `https://example.com/receipts/${receiptId}`, // Mock URL - replace with actual API
-        });
-
-        addToast('Receipt uploaded successfully!', 'success');
+          addToast('Receipt uploaded successfully!', 'success');
+        } else {
+          throw new Error('Upload failed');
+        }
       } catch (error) {
         console.error('Error processing receipt:', error);
         updateReceipt(receiptId, {
           status: 'error',
-          error: 'Failed to process image',
+          error: error instanceof Error ? error.message : 'Failed to process image',
         });
-        addToast('Failed to process receipt', 'error');
+        addToast('Failed to upload receipt', 'error');
       }
     },
-    [receipts.length, addReceipt, updateReceipt, addToast, simulateUpload]
+    [receipts.length, addReceipt, updateReceipt, addToast, uploadMutation]
   );
 
   const handleFileDrop = useCallback(
