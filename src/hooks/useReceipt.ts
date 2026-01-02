@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { receiptService } from '../services/receipt.service';
-import type { SubmitReceiptRequest, ProcessingStatusResponse } from '../services/receipt.service';
+import type { ParseReceiptRequest } from '../services/receipt.service';
 import type { ProcessedReceiptData } from '../types/receipt';
 
 // Query keys
@@ -9,12 +9,12 @@ export const receiptKeys = {
   status: (id: string) => [...receiptKeys.all, 'status', id] as const,
 };
 
-// Hook to submit receipt for processing
-export const useSubmitReceipt = () => {
+// Hook to upload receipt file
+export const useUploadReceipt = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: SubmitReceiptRequest) => receiptService.submitReceipt(data),
+    mutationFn: (file: File) => receiptService.uploadReceipt(file),
     onSuccess: () => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: receiptKeys.all });
@@ -22,35 +22,16 @@ export const useSubmitReceipt = () => {
   });
 };
 
-// Hook to poll processing status
-export const useReceiptProcessingStatus = (
-  receiptId: string | null,
-  options?: {
-    enabled?: boolean;
-    onSuccess?: (data: ProcessingStatusResponse) => void;
-    onError?: (error: Error) => void;
-  }
-) => {
-  return useQuery({
-    queryKey: receiptKeys.status(receiptId || ''),
-    queryFn: async () => {
-      if (!receiptId) throw new Error('Receipt ID is required');
-      const response = await receiptService.getProcessingStatus(receiptId);
-      return response.data;
+// Hook to parse receipt
+export const useParseReceipt = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: ParseReceiptRequest) => receiptService.parseReceipt(data),
+    onSuccess: () => {
+      // Invalidate relevant queries
+      queryClient.invalidateQueries({ queryKey: receiptKeys.all });
     },
-    enabled: !!receiptId && options?.enabled !== false,
-    refetchInterval: (query) => {
-      const data = query.state.data;
-      // Poll every 2 seconds if processing or pending
-      if (data?.status === 'processing' || data?.status === 'pending') {
-        return 2000;
-      }
-      // Stop polling when completed or failed
-      return false;
-    },
-    retry: 1,
-    // Timeout after 60 seconds
-    staleTime: 60000,
   });
 };
 
@@ -59,10 +40,9 @@ export const useRetryProcessing = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (receiptId: string) => receiptService.retryProcessing(receiptId),
-    onSuccess: (_, receiptId) => {
-      // Invalidate status query for this receipt
-      queryClient.invalidateQueries({ queryKey: receiptKeys.status(receiptId) });
+    mutationFn: (data: ParseReceiptRequest) => receiptService.parseReceipt(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: receiptKeys.all });
     },
   });
 };

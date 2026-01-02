@@ -2,15 +2,28 @@ import apiClient from '../lib/axios';
 import type { ApiResponse } from '../types';
 import type { ProcessedReceiptData } from '../types/receipt';
 
-export interface SubmitReceiptRequest {
-  imageUrl: string;
+export interface UploadReceiptResponse {
+  receiptId: string;
   fileName: string;
+  filePath: string;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
+  uploadedAt: string;
 }
 
-export interface SubmitReceiptResponse {
-  receiptId: string;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
-  message?: string;
+export interface ParseReceiptRequest {
+  imageUrl: string;
+  receiptId?: string;
+}
+
+export interface ParseReceiptResponse {
+  parsed: ProcessedReceiptData;
+  metadata: {
+    source: 'openai' | 'google-vision' | 'failed';
+    processingTime: number;
+    fallbackUsed: boolean;
+  };
 }
 
 export interface ProcessingStatusResponse {
@@ -22,10 +35,27 @@ export interface ProcessingStatusResponse {
 }
 
 export const receiptService = {
-  // Submit receipt for AI processing
-  submitReceipt: async (data: SubmitReceiptRequest) => {
-    const response = await apiClient.post<ApiResponse<SubmitReceiptResponse>>(
-      '/receipts/process',
+  // Upload receipt file
+  uploadReceipt: async (file: File) => {
+    const formData = new FormData();
+    formData.append('receipt', file);
+    
+    const response = await apiClient.post<ApiResponse<UploadReceiptResponse>>(
+      '/v1/receipts/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data;
+  },
+
+  // Parse receipt from uploaded image URL
+  parseReceipt: async (data: ParseReceiptRequest) => {
+    const response = await apiClient.post<ApiResponse<ParseReceiptResponse>>(
+      '/v1/receipts/parse',
       data
     );
     return response.data;
@@ -41,8 +71,8 @@ export const receiptService = {
 
   // Retry failed processing
   retryProcessing: async (receiptId: string) => {
-    const response = await apiClient.post<ApiResponse<SubmitReceiptResponse>>(
-      `/receipts/${receiptId}/retry`
+    const response = await apiClient.post<ApiResponse<ParseReceiptResponse>>(
+      `/v1/receipts/${receiptId}/retry`
     );
     return response.data;
   },
@@ -50,7 +80,7 @@ export const receiptService = {
   // Update processed receipt data (after user edits)
   updateReceiptData: async (receiptId: string, data: Partial<ProcessedReceiptData>) => {
     const response = await apiClient.patch<ApiResponse<ProcessedReceiptData>>(
-      `/receipts/${receiptId}`,
+      `/v1/receipts/${receiptId}`,
       data
     );
     return response.data;

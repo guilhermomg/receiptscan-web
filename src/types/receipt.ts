@@ -29,6 +29,7 @@ export interface Receipt {
   error?: string;
   compressedFile?: File;
   uploadedUrl?: string;
+  backendReceiptId?: string; // ID from backend upload response
   processedData?: ProcessedReceiptData;
   processingStartedAt?: Date;
 }
