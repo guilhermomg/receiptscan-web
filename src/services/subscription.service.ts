@@ -1,4 +1,6 @@
 import apiClient from '../lib/axios';
+import type { ApiResponse } from '../types';
+import { PLANS } from '../types/subscription';
 import type { Subscription, UsageStats, PaymentMethod, PlanTier } from '../types/subscription';
 import type { Invoice, CheckoutSession } from '../types/billing';
 
@@ -17,13 +19,69 @@ export interface UpdateSubscriptionRequest {
   planId: string;
 }
 
+interface BackendSubscription {
+  id?: string;
+  subscriptionId?: string;
+  userId?: string;
+  planId?: string;
+  plan?: string;
+  status?: Subscription['status'];
+  currentPeriodStart?: string;
+  currentPeriodEnd?: string;
+  currentPeriodStartDate?: string;
+  currentPeriodEndDate?: string;
+  cancelAtPeriodEnd?: boolean;
+  cancel_at_period_end?: boolean;
+  stripeSubscriptionId?: string;
+  stripeCustomerId?: string;
+  stripe_subscription_id?: string;
+  stripe_customer_id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+const mapBackendSubscription = (sub: BackendSubscription): Subscription => {
+  const now = Date.now();
+
+  return {
+    id: sub.id || sub.subscriptionId || '',
+    userId: sub.userId || '',
+    planId: sub.planId || sub.plan || 'free',
+    status: sub.status || 'active',
+    currentPeriodStart: new Date(
+      sub.currentPeriodStart || sub.currentPeriodStartDate || sub.currentPeriodEnd || now
+    ),
+    currentPeriodEnd: new Date(sub.currentPeriodEnd || sub.currentPeriodEndDate || now),
+    cancelAtPeriodEnd: Boolean(sub.cancelAtPeriodEnd ?? sub.cancel_at_period_end ?? false),
+    stripeSubscriptionId: sub.stripeSubscriptionId || sub.stripe_subscription_id || '',
+    stripeCustomerId: sub.stripeCustomerId || sub.stripe_customer_id || '',
+    createdAt: new Date(sub.createdAt || now),
+    updatedAt: new Date(sub.updatedAt || now),
+  };
+};
+
 /**
  * Get current user's subscription
  */
 export const getSubscription = async (): Promise<Subscription | null> => {
   try {
-    const response = await apiClient.get<Subscription>('/subscriptions/current');
-    return response.data;
+    const response = await apiClient.get<
+      | ApiResponse<{
+          subscription: BackendSubscription | null;
+        }>
+      | BackendSubscription
+    >('/v1/billing/subscription');
+
+    // Handle ApiResponse shape
+    if ('status' in response.data) {
+      if (response.data.status !== 'success' || !response.data.data?.subscription) {
+        return null;
+      }
+      return mapBackendSubscription(response.data.data.subscription);
+    }
+
+    // Handle direct subscription payload
+    return mapBackendSubscription(response.data as BackendSubscription);
   } catch (error) {
     // Return null if no subscription exists (free tier)
     if (error && typeof error === 'object' && 'response' in error) {
@@ -40,8 +98,40 @@ export const getSubscription = async (): Promise<Subscription | null> => {
  * Get usage statistics for current user
  */
 export const getUsageStats = async (): Promise<UsageStats> => {
-  const response = await apiClient.get<UsageStats>('/subscriptions/usage');
-  return response.data;
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const response = await apiClient.get<
+    ApiResponse<{
+      stats: {
+        count: number;
+        totalAmount: number;
+      };
+    }>
+  >('/v1/receipts/stats', {
+    params: {
+      startDate: startOfMonth.toISOString(),
+    },
+  });
+
+  const receiptsProcessedThisMonth =
+    response.data && 'status' in response.data && response.data.status === 'success'
+      ? (response.data.data?.stats.count ?? 0)
+      : 0;
+
+  const planTier = await getCurrentPlanTier();
+  const plan = PLANS.find((p) => p.tier === planTier) || PLANS[0];
+  const receiptsLimit = plan.features.receiptsPerMonth;
+
+  const resetDate = new Date(startOfMonth);
+  resetDate.setMonth(resetDate.getMonth() + 1);
+
+  return {
+    receiptsProcessedThisMonth,
+    receiptsLimit,
+    resetDate,
+  };
 };
 
 /**
@@ -50,7 +140,7 @@ export const getUsageStats = async (): Promise<UsageStats> => {
 export const createCheckoutSession = async (
   request: CreateCheckoutSessionRequest
 ): Promise<CheckoutSession> => {
-  const response = await apiClient.post<CheckoutSession>('/subscriptions/checkout', request);
+  const response = await apiClient.post<CheckoutSession>('/v1/billing/create-checkout', request);
   return response.data;
 };
 
@@ -60,7 +150,7 @@ export const createCheckoutSession = async (
 export const updateSubscription = async (
   request: UpdateSubscriptionRequest
 ): Promise<Subscription> => {
-  const response = await apiClient.put<Subscription>('/subscriptions/current', request);
+  const response = await apiClient.put<Subscription>('/v1/billing/subscription', request);
   return response.data;
 };
 
@@ -68,7 +158,7 @@ export const updateSubscription = async (
  * Cancel subscription at period end
  */
 export const cancelSubscription = async (): Promise<Subscription> => {
-  const response = await apiClient.post<Subscription>('/subscriptions/current/cancel');
+  const response = await apiClient.post<Subscription>('/v1/billing/subscription/cancel');
   return response.data;
 };
 
@@ -76,7 +166,7 @@ export const cancelSubscription = async (): Promise<Subscription> => {
  * Reactivate a canceled subscription
  */
 export const reactivateSubscription = async (): Promise<Subscription> => {
-  const response = await apiClient.post<Subscription>('/subscriptions/current/reactivate');
+  const response = await apiClient.post<Subscription>('/v1/billing/subscription/reactivate');
   return response.data;
 };
 
@@ -84,7 +174,7 @@ export const reactivateSubscription = async (): Promise<Subscription> => {
  * Get billing history (invoices)
  */
 export const getBillingHistory = async (): Promise<Invoice[]> => {
-  const response = await apiClient.get<Invoice[]>('/subscriptions/invoices');
+  const response = await apiClient.get<Invoice[]>('/v1/billing/invoices');
   return response.data;
 };
 
@@ -92,7 +182,7 @@ export const getBillingHistory = async (): Promise<Invoice[]> => {
  * Get payment methods
  */
 export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
-  const response = await apiClient.get<PaymentMethod[]>('/subscriptions/payment-methods');
+  const response = await apiClient.get<PaymentMethod[]>('/v1/billing/payment-methods');
   return response.data;
 };
 
@@ -100,7 +190,7 @@ export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
  * Add a new payment method
  */
 export const addPaymentMethod = async (paymentMethodId: string): Promise<PaymentMethod> => {
-  const response = await apiClient.post<PaymentMethod>('/subscriptions/payment-methods', {
+  const response = await apiClient.post<PaymentMethod>('/v1/billing/payment-methods', {
     paymentMethodId,
   });
   return response.data;
@@ -110,21 +200,23 @@ export const addPaymentMethod = async (paymentMethodId: string): Promise<Payment
  * Set default payment method
  */
 export const setDefaultPaymentMethod = async (paymentMethodId: string): Promise<void> => {
-  await apiClient.put(`/subscriptions/payment-methods/${paymentMethodId}/default`);
+  await apiClient.put(`/v1/billing/payment-methods/${paymentMethodId}/default`);
 };
 
 /**
  * Remove a payment method
  */
 export const removePaymentMethod = async (paymentMethodId: string): Promise<void> => {
-  await apiClient.delete(`/subscriptions/payment-methods/${paymentMethodId}`);
+  await apiClient.delete(`/v1/billing/payment-methods/${paymentMethodId}`);
 };
 
 /**
  * Get customer portal URL for Stripe-managed billing
  */
 export const getCustomerPortalUrl = async (returnUrl: string): Promise<string> => {
-  const response = await apiClient.post<{ url: string }>('/subscriptions/portal', { returnUrl });
+  const response = await apiClient.post<{ url: string }>('/v1/billing/create-portal', {
+    returnUrl,
+  });
   return response.data.url;
 };
 

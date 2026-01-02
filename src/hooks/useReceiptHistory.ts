@@ -1,11 +1,7 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '../contexts/useAuth';
 import { receiptHistoryService } from '../services/receipt-history.service';
-import type {
-  ProcessedReceiptData,
-  ReceiptFilters,
-  ReceiptSortOptions,
-} from '../types/receipt';
+import type { ProcessedReceiptData, ReceiptFilters, ReceiptSortOptions } from '../types/receipt';
 
 // Query keys
 export const receiptHistoryKeys = {

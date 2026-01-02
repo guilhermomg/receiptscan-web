@@ -300,7 +300,7 @@ export const receiptHistoryService = {
     // For recent total, we'll need to make a separate request with date filter
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
+
     const recentResponse = await apiClient.get<
       ApiResponse<{
         stats: {

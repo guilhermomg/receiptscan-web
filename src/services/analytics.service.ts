@@ -120,14 +120,13 @@ export const analyticsService = {
 
     // Generate alerts (client-side for now)
     const alerts: SpendingAlert[] = [];
-    
+
     // High spending alert
     if (monthlyComparison.length >= 2) {
       const current = monthlyComparison[monthlyComparison.length - 1];
       const previous = monthlyComparison[monthlyComparison.length - 2];
-      const percentageChange = previous.amount > 0 
-        ? ((current.amount - previous.amount) / previous.amount) * 100
-        : 0;
+      const percentageChange =
+        previous.amount > 0 ? ((current.amount - previous.amount) / previous.amount) * 100 : 0;
 
       if (percentageChange > 20) {
         alerts.push({
