@@ -31,7 +31,7 @@ const ReceiptProcessor: React.FC<ReceiptProcessorProps> = ({ receipt, onProcessi
     if (receipt.status === 'uploaded' && receipt.uploadedUrl && !receipt.processedData && !isParsing && !parseError) {
       setIsParsing(true);
       updateReceipt(receipt.id, { status: 'processing' });
-      
+
       parseMutation.mutate(
         {
           imageUrl: receipt.uploadedUrl,
@@ -68,7 +68,7 @@ const ReceiptProcessor: React.FC<ReceiptProcessorProps> = ({ receipt, onProcessi
       setParseError(null);
       setIsParsing(true);
       updateReceipt(receipt.id, { status: 'processing', error: undefined });
-      
+
       parseMutation.mutate(
         {
           imageUrl: receipt.uploadedUrl,

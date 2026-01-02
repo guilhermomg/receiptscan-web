@@ -69,7 +69,7 @@ const ReceiptUpload: React.FC<ReceiptUploadProps> = ({ onUploadComplete: _onUplo
 
         // Upload to backend
         const uploadResponse = await uploadMutation.mutateAsync(compressedFile);
-        
+
         if (uploadResponse.status === 'success' && uploadResponse.data) {
           updateReceipt(receiptId, {
             status: 'uploaded',
